@@ -27,70 +27,57 @@ namespace HomeWorkConsoleApp7.Library
         /// <summary>
         /// Просмотр записи
         /// </summary>
-        public UserInfo? ViewRecord(int id) {
-
-            if (!ExistRecord(id))
-                return null;
-            return userInfos[id];
+        public void ViewRecord() {
+            var idView = utils.WaitEnterPassAddText("Введите номер просматриваемой записи:", 1, userInfos.Length);
+            var item = userInfos[idView-1];
+            var text = $"Номер в списке: {idView,5}\n" +
+                $"Дата и время добавления записи: {item.AddDateTimeWriteEntry,5:dd/MM/yyyy HH:mm}\n" +
+                $"Ф.И.О.: {item.FullName,5}\n" +
+                $"Возраст: {item.Age,5}\n" +
+                $"Рост: {item.Height,5}\n" +
+                $"Дата рождения: {item.DateOfBirth,5:dd/MM/yyyy}\n" +
+                $"Место рождения: {item.PlaceOfBirth,5}";
+            Console.WriteLine(text);
         }
+
         /// <summary>
         /// Создание записи
         /// </summary>
-        public void CreateRecord() {
-            Console.WriteLine("Введите:");
-            Console.Write("Фамилию Имя Отчество:");
-            string fullName = Console.ReadLine();
-
-            var age = $"{utils.WaitEnterPassAddText("Возраст:", 0, 999)}";
-
-            var height = $"{utils.WaitEnterPassAddText("Рост:", 0, 999)}";
-
-            Console.Write("Дату рождения:");
-            string dateOfBirth = Console.ReadLine();
-            dateOfBirth = utils.СorrectionDateTimeIsString(dateOfBirth);
-
-            Console.Write("Место рождения:");
-            string placeOfBirth = Console.ReadLine();
-
-            var addDateTimeWriteEntry = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-
-            var dataUser = $"{addDateTimeWriteEntry}#{fullName}#{age}#{height}#{dateOfBirth}#{placeOfBirth}";
-
-
-            UserInfo input = (UserInfo)ParcerString(dataUser);
+        public void CreateRecord()
+        {
+            UserInfo input = EnterDataUser();
 
             var items = userInfos.ToList();
             items.Add(input);
             userInfos = items.ToArray();
             items.Clear();
         }
+
+        
+
         /// <summary>
         /// Удаление записи
         /// </summary>
-        public bool DeleteRecord(int id)
+        public void DeleteRecord()
         {
-            if (ExistRecord(id)) {
-                var items = userInfos.ToList();
-                items.RemoveAt(id);
-                userInfos = items.ToArray();
-                items.Clear();
-                return true;
-            }
-            return false;
+            var idRemove = utils.WaitEnterPassAddText("Введите номер удаляемой записи:", 1, userInfos.Length);
+
+            var items = userInfos.ToList();
+            items.RemoveAt(idRemove-1);
+            userInfos = items.ToArray();
+            items.Clear();
+            Console.WriteLine("Успешное удаление");
         }
 
 
         /// <summary>
         /// Редактирование записи
         /// </summary>
-        public bool EditRecord(int id, UserInfo input)
+        public void EditRecord()
         {
-            if (ExistRecord(id))
-            {
-                userInfos[id] = input;
-                return true;
-            }
-            return false;
+            var idChange = utils.WaitEnterPassAddText("Введите номер изменяемой записи:", 1, userInfos.Length);
+            UserInfo input = EnterDataUser();
+            userInfos[idChange-1] = input;
         }
 
         /// <summary>
@@ -99,6 +86,7 @@ namespace HomeWorkConsoleApp7.Library
         public void LoadOnDates() { 
         
         }
+
         /// <summary>
         /// Сортировка по возрастанию и убыванию даты.
         /// </summary>
@@ -113,6 +101,9 @@ namespace HomeWorkConsoleApp7.Library
             }
         }
 
+        /// <summary>
+        /// Окончательная операция сохранения
+        /// </summary>
         public void SaveRecordsToFile() {
 
             string text = ParcerArrayUserInfo();
@@ -281,14 +272,39 @@ namespace HomeWorkConsoleApp7.Library
         /// </summary>
         /// <returns></returns>
         private string ParcerArrayUserInfo() {
-            int iterator = 0;
+            int iterator = 1;
             string allDataUsers = "";
             foreach (var item in userInfos)
             {
-                allDataUsers += $"{iterator++}#{item.AddDateTimeWriteEntry.ToString("dd/MM/yyyy HH:mm")}#{item.FullName}#{item.Age}#{item.Height}#{item.DateOfBirth.ToString("dd/MM/yyyy")}#{item.PlaceOfBirth}\n";
+                allDataUsers += $"{iterator++}#{item.AddDateTimeWriteEntry:dd/MM/yyyy HH:mm}#{item.FullName}#{item.Age}#{item.Height}#{item.DateOfBirth.ToString("dd/MM/yyyy")}#{item.PlaceOfBirth}\n";
             }
             return allDataUsers;
         }
 
+        private UserInfo EnterDataUser()
+        {
+            Console.WriteLine("Введите:");
+            Console.Write("Фамилию Имя Отчество:");
+            string fullName = Console.ReadLine();
+
+            var age = $"{utils.WaitEnterPassAddText("Возраст:", 0, 999)}";
+
+            var height = $"{utils.WaitEnterPassAddText("Рост:", 0, 999)}";
+
+            Console.Write("Дату рождения:");
+            string dateOfBirth = Console.ReadLine();
+            dateOfBirth = utils.СorrectionDateTimeIsString(dateOfBirth);
+
+            Console.Write("Место рождения:");
+            string placeOfBirth = Console.ReadLine();
+
+            var addDateTimeWriteEntry = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
+            var dataUser = $"{addDateTimeWriteEntry}#{fullName}#{age}#{height}#{dateOfBirth}#{placeOfBirth}";
+
+
+            UserInfo input = (UserInfo)ParcerString(dataUser);
+            return input;
+        }
     }
 }

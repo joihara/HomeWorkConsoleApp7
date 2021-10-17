@@ -40,7 +40,7 @@ namespace HomeWorkConsoleApp7.Library
         {
             while (true)
             {
-                Console.WriteLine(text);
+                Console.Write(text);
                 var readNumberOrNull = WaitEnterPass(minValue, maxValue);
                 if (readNumberOrNull != null)
                 {

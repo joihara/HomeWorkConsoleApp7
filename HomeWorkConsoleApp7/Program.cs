@@ -8,10 +8,10 @@ namespace HomeWorkConsoleApp7
         static void Main(string[] args)
         {
             FileUtil fileUtil = new("user.db");
-            Utils utils = new();
 
-            fileUtil.CreateRecord();
-            fileUtil.SaveRecordsToFile();
+            fileUtil.ViewRecord();
+            //fileUtil.CreateRecord();
+            //fileUtil.SaveRecordsToFile();
 
             Console.ReadLine();
         }
