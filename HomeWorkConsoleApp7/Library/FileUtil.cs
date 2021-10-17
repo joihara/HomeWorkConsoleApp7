@@ -51,6 +51,7 @@ namespace HomeWorkConsoleApp7.Library
             items.Add(input);
             userInfos = items.ToArray();
             items.Clear();
+            SaveRecordsToFile();
         }
 
         
@@ -67,6 +68,7 @@ namespace HomeWorkConsoleApp7.Library
             userInfos = items.ToArray();
             items.Clear();
             Console.WriteLine("Успешное удаление");
+            SaveRecordsToFile();
         }
 
 
@@ -78,6 +80,7 @@ namespace HomeWorkConsoleApp7.Library
             var idChange = utils.WaitEnterPassAddText("Введите номер изменяемой записи:", 1, userInfos.Length);
             UserInfo input = EnterDataUser();
             userInfos[idChange-1] = input;
+            SaveRecordsToFile();
         }
 
         /// <summary>
@@ -90,21 +93,22 @@ namespace HomeWorkConsoleApp7.Library
         /// <summary>
         /// Сортировка по возрастанию и убыванию даты.
         /// </summary>
-        /// <param name="ascending">Сортировать по возврастанию true по убыванию false</param>
-        public void SordRecord(bool ascending) {
+        public void SordRecord() {
+            
+            
             if (ascending)
             {
-
+                var infos = userInfos.OrderBy(x => x.DateOfBirth).ToArray();
             }
             else {
-            
+                var s = userInfos.OrderByDescending(x => x.DateOfBirth).ToArray();
             }
         }
 
         /// <summary>
         /// Окончательная операция сохранения
         /// </summary>
-        public void SaveRecordsToFile() {
+        private void SaveRecordsToFile() {
 
             string text = ParcerArrayUserInfo();
             WriteFile(fileName, text, false);
@@ -186,7 +190,7 @@ namespace HomeWorkConsoleApp7.Library
         /// Вывода в консоль массив с данными пользователей
         /// </summary>
         /// <param name="input"></param>
-        public void GetComplitedFormat(UserInfo[] input)
+        private void GetComplitedFormat(UserInfo[] input)
         {
             Console.WriteLine("ID|AddDateTimeWriteEntry|FullName|Age|Height|DateOfBirth|PlaceOfBirth");
             int iterator = 0;
