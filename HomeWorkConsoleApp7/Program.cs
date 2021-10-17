@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomeWorkConsoleApp7.Library;
+using System;
 
 namespace HomeWorkConsoleApp7
 {
@@ -6,7 +7,13 @@ namespace HomeWorkConsoleApp7
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            FileUtil fileUtil = new("user.db");
+            Utils utils = new();
+
+            fileUtil.CreateRecord();
+            fileUtil.SaveRecordsToFile();
+
+            Console.ReadLine();
         }
     }
 }
