@@ -36,7 +36,7 @@ namespace HomeWorkConsoleApp7.Library
                 $"Возраст: {item.Age,5}\n" +
                 $"Рост: {item.Height,5}\n" +
                 $"Дата рождения: {item.DateOfBirth,5:dd/MM/yyyy}\n" +
-                $"Место рождения: {item.PlaceOfBirth,5}";
+                $"Место рождения: {item.PlaceOfBirth,5}\n";
             Console.WriteLine(text);
         }
 
@@ -86,22 +86,173 @@ namespace HomeWorkConsoleApp7.Library
         /// <summary>
         /// Загрузка записей в выбранном диапазоне дат
         /// </summary>
-        public void LoadOnDates() { 
-        
+        public void LoadOnDates() {
+            if (userInfos.Length > 0)
+            {
+                string startWork1 = "Выберите для какого диапазона дат отображение:\n" +
+                         "1) Дата добавления\n" +
+                         "2) Дата рождения\n";
+                var step1 = utils.WaitEnterPassAddText(startWork1, 1, 2);
+
+
+                if (step1 == 1)
+                {
+                    var addDateTimeWriteEntryMax = userInfos.Max(e => e.AddDateTimeWriteEntry);
+                    var addDateTimeWriteEntryMin = userInfos.Min(e => e.AddDateTimeWriteEntry);
+                    string rangeDate = $"Выберите в диапазоне от {addDateTimeWriteEntryMin:dd/MM/yyyy} до {addDateTimeWriteEntryMax:dd/MM/yyyy}";
+                    Console.WriteLine(rangeDate);
+                    DateTime startRange;
+                    DateTime endRange;
+                    startRange = MinCheck(addDateTimeWriteEntryMax, addDateTimeWriteEntryMin);
+                    endRange = MaxCheck(addDateTimeWriteEntryMax, startRange);
+                    string selectRangeDate = $"Выбран диапазон от {startRange:dd/MM/yyyy} до {endRange:dd/MM/yyyy}";
+                    Console.WriteLine(selectRangeDate);
+                    var userInfosRangeDate = userInfos.Where(e => e.AddDateTimeWriteEntry >= startRange && e.AddDateTimeWriteEntry <= endRange);
+                    GetComplitedFormat(userInfosRangeDate.ToArray());
+                    Console.ReadKey();
+                }
+                else {
+                    var dateOfBirthMax = userInfos.Max(e => e.DateOfBirth);
+                    var dateOfBirthMin = userInfos.Min(e => e.DateOfBirth);
+                    string rangeDate = $"Выберите в диапазоне от {dateOfBirthMin:dd/MM/yyyy} до {dateOfBirthMax:dd/MM/yyyy}";
+                    Console.WriteLine(rangeDate);
+                    DateTime startRange;
+                    DateTime endRange;
+                    startRange = MinCheck(dateOfBirthMax, dateOfBirthMin);
+                    endRange = MaxCheck(dateOfBirthMax, startRange);
+                    string selectRangeDate = $"Выбран диапазон от {startRange:dd/MM/yyyy} до {endRange:dd/MM/yyyy}";
+                    Console.WriteLine(selectRangeDate);
+                    var userInfosRangeDate = userInfos.Where(e => e.DateOfBirth >= startRange && e.DateOfBirth <= endRange);
+                    GetComplitedFormat(userInfosRangeDate.ToArray());
+                    Console.ReadKey();
+                }
+                    
+
+                
+            }
+            else
+            {
+                Console.WriteLine("Отображение недоступно нет данных");
+            }
+        }
+
+        private DateTime MaxCheck(DateTime addDateTimeWriteEntryMax, DateTime startRange)
+        {
+            Console.Write("Максимальный диапазон:");
+            DateTime endRange;
+            while (true)
+            {
+                endRange = utils.GetDateTimeIsString();
+                if (endRange >= startRange && endRange <= addDateTimeWriteEntryMax)
+                {
+                    break;
+                }
+                Console.WriteLine("Неверный максимальный диапазон");
+            }
+
+            return endRange;
+        }
+
+        private DateTime MinCheck(DateTime addDateTimeWriteEntryMax, DateTime addDateTimeWriteEntryMin)
+        {
+            Console.Write("Минимальный диапазон:");
+            DateTime startRange;
+            while (true)
+            {
+                startRange = utils.GetDateTimeIsString();
+                if (startRange >= addDateTimeWriteEntryMin && startRange <= addDateTimeWriteEntryMax)
+                {
+                    break;
+                }
+                Console.WriteLine("Неверный минимальный диапазон");
+            }
+
+            return startRange;
         }
 
         /// <summary>
         /// Сортировка по возрастанию и убыванию даты.
         /// </summary>
         public void SordRecord() {
-            
-            
-            if (ascending)
+            if (userInfos.Length > 1)
             {
-                var infos = userInfos.OrderBy(x => x.DateOfBirth).ToArray();
+                string startWork1 = "Выберите сортировку по дате:\n" +
+                         "1) По возрастанию\n" +
+                         "2) По убыванию\n";
+                var step1 = utils.WaitEnterPassAddText(startWork1, 1, 2);
+
+                string startWork2 = "Выберите поле по которому будет произведенна сортировка:\n" +
+                         "1) По дате добавления\n" +
+                         "2) По Имени\n" +
+                         "3) По Возрасту\n" +
+                         "4) По Росту\n" +
+                         "5) По Дате рождения\n" +
+                         "6) По Месту рождения\n";
+
+                var step2 = utils.WaitEnterPassAddText(startWork2, 1, 6);
+
+                bool ascending = step1 == 1;
+
+
+                if (ascending)
+                {
+                    switch (step2)
+                    {
+                        case 1:
+                            userInfos = userInfos.OrderBy(x => x.AddDateTimeWriteEntry).ToArray();
+                            break;
+                        case 2:
+                            userInfos = userInfos.OrderBy(x => x.FullName).ToArray();
+                            break;
+                        case 3:
+                            userInfos = userInfos.OrderBy(x => x.Age).ToArray();
+                            break;
+                        case 4:
+                            userInfos = userInfos.OrderBy(x => x.Height).ToArray();
+                            break;
+                        case 5:
+                            userInfos = userInfos.OrderBy(x => x.DateOfBirth).ToArray();
+                            break;
+                        case 6:
+                            userInfos = userInfos.OrderBy(x => x.PlaceOfBirth).ToArray();
+                            break;
+                        default:
+                            break;
+                    }
+                    Console.WriteLine("Сортирока по возрастанию завершена");
+                }
+                else
+                {
+                    switch (step2)
+                    {
+                        case 1:
+                            userInfos = userInfos.OrderByDescending(x => x.AddDateTimeWriteEntry).ToArray();
+                            break;
+                        case 2:
+                            userInfos = userInfos.OrderByDescending(x => x.FullName).ToArray();
+                            break;
+                        case 3:
+                            userInfos = userInfos.OrderByDescending(x => x.Age).ToArray();
+                            break;
+                        case 4:
+                            userInfos = userInfos.OrderByDescending(x => x.Height).ToArray();
+                            break;
+                        case 5:
+                            userInfos = userInfos.OrderByDescending(x => x.DateOfBirth).ToArray();
+                            break;
+                        case 6:
+                            userInfos = userInfos.OrderByDescending(x => x.PlaceOfBirth).ToArray();
+                            break;
+                        default:
+                            break;
+                    }
+                    Console.WriteLine("Сортирока по убыванию завершена");
+                }
+
+                SaveRecordsToFile();
             }
             else {
-                var s = userInfos.OrderByDescending(x => x.DateOfBirth).ToArray();
+                Console.WriteLine("Сортировка невозможна мало данных для сортировки");
             }
         }
 
