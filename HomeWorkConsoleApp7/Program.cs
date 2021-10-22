@@ -38,10 +38,10 @@ namespace HomeWorkConsoleApp7
                     fileUtil.EditRecord();
                     break;
                 case 5:
-                    fileUtil.LoadOnDates();//not work
+                    fileUtil.LoadOnDates();
                     break;
                 case 6:
-                    fileUtil.SordRecord();//not work
+                    fileUtil.SordRecord();
                     break;
                 case 7:
                         endWork = true;
